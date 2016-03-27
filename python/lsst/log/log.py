@@ -39,42 +39,54 @@ WARN = 30000
 ERROR = 40000
 FATAL = 50000
 
+
 def configure(*args):
     if len(args) > 0:
         configure_iface(args[0])
     else:
         configure_iface()
 
+
 def configure_prop(properties):
     configure_prop_iface(properties)
+
 
 def getDefaultLoggerName():
     name = getDefaultLoggerName_iface()
     return name
 
+
 def pushContext(name):
     pushContext_iface(name)
+
 
 def popContext():
     popContext_iface()
 
+
 def MDC(key, value):
     MDC_iface(str(key), str(value))
+
 
 def MDCRemove(key):
     MDCRemove_iface(str(key))
 
+
 def MDCRegisterInit(func):
     MDCRegisterInit_iface(func)
+
 
 def setLevel(loggername, level):
     setLevel_iface(loggername, level)
 
+
 def getLevel(loggername):
     return getLevel_iface(loggername)
 
+
 def isEnabledFor(loggername, level):
     return isEnabledFor_iface(loggername, level)
+
 
 def _getFrame(depth):
     frame = inspect.currentframe().f_back
@@ -82,8 +94,10 @@ def _getFrame(depth):
         frame = frame.f_back
     return frame
 
+
 def _getFuncName(depth):
     return inspect.stack()[depth+1][3]
+
 
 def log(loggername, level, fmt, *args, **kwargs):
     depth = kwargs.get('depth', 1)
@@ -93,26 +107,34 @@ def log(loggername, level, fmt, *args, **kwargs):
                         path.split(frame.f_code.co_filename)[1],
                         _getFuncName(depth), frame.f_lineno, fmt % args)
 
+
 def trace(fmt, *args):
     log("", TRACE, fmt, *args, depth=2)
+
 
 def debug(fmt, *args):
     log("", DEBUG, fmt, *args, depth=2)
 
+
 def info(fmt, *args):
     log("", INFO, fmt, *args, depth=2)
+
 
 def warn(fmt, *args):
     log("", WARN, fmt, *args, depth=2)
 
+
 def error(fmt, *args):
     log("", ERROR, fmt, *args, depth=2)
+
 
 def fatal(fmt, *args):
     log("", FATAL, fmt, *args, depth=2)
 
+
 def lwpID():
     return lwpID_iface()
+
 
 class LogContext:
 
@@ -124,7 +146,7 @@ class LogContext:
         self.open()
         return self
 
-    def __exit__(self ,type, value, traceback):
+    def __exit__(self, type, value, traceback):
         self.close()
 
     def __del__(self):
@@ -150,7 +172,9 @@ class LogContext:
     def isEnabledFor(self, level):
         return isEnabledFor("", level)
 
+
 class LogHandler(logging.Handler):
+
     def __init__(self, name=None, level=None):
         self.context = LogContext(name=name, level=level)
         self.context.open()
@@ -171,7 +195,7 @@ class LogHandler(logging.Handler):
 
     def emit(self, record):
         forcedLog_iface(record.name, self.translateLevel(record.levelno), record.filename,
-                  record.funcName, record.lineno, record.msg % record.args)
+                        record.funcName, record.lineno, record.msg % record.args)
 
     def translateLevel(self, levelno):
         """

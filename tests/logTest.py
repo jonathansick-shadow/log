@@ -32,6 +32,7 @@ import tempfile
 import threading
 import unittest
 
+
 class TestLog(unittest.TestCase):
 
     class StdoutCapture(object):
@@ -212,7 +213,6 @@ INFO  root  testPattern (logTest.py:{0[8]}) logTest.py({0[8]}) - This is INFO 5 
 DEBUG root  testPattern (logTest.py:{0[9]}) logTest.py({0[9]}) - This is DEBUG 5 - {{{{y,foo}}}}
 """.format([x + 174 for x in (0, 1, 8, 9, 14, 15, 18, 19, 22, 23)], __name__))
 
-
     def testMDCPutPid(self):
         """
         Test add of PID Mapped Diagnostic Context (MDC).
@@ -305,7 +305,7 @@ log4j.appender.CA.layout=PatternLayout
 log4j.appender.CA.layout.ConversionPattern=%-5p - %m %X%n
 """)
 
-            fun = lambda : log.MDC("MDC_INIT", "OK")
+            fun = lambda: log.MDC("MDC_INIT", "OK")
             log.MDCRegisterInit(fun)
 
             log.info("main thread")
@@ -330,6 +330,8 @@ log4j.appender.CA.layout.ConversionPattern=%-5p - %m %X%n
         self.assertEqual(lwp1, lwp2)
 
 ####################################################################################
+
+
 def main():
     unittest.main()
 
